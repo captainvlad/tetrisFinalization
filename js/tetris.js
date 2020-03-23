@@ -1,49 +1,41 @@
 var playground = createPlayground();
+start();
 
-console.log(playground);
-
-// will add object positions to the emply playground array
-function renderPositions() {
-  objects.forEach( object => {
-    object.position.forEach( ([rowIndex, cellIndex]) => {
-      playground[rowIndex][cellIndex] = TYPE_COLORS[object.type]
-    })
-  });
+function start() {
+  createObj()
 }
 
-function moveDown(obj) {
-  console.log('moving down')
-  // 1. get current object - done
-  let currentObject = getCurrentObject();
+function destroyLast(k){
+  let destroy = true;
 
-  // 2. re-define objects - done
-  console.log(objects)
-  currentObject.position.forEach(position => (position[0] > 0 && (position[0] -= 1)))
-  console.log(objects)
-  
-  // 3. re-define clear playground
-  playground = createPlayground();
+  for(let i = 0; i < 5; i++){
+    destroy &= (playground[k][i] !== undefined)
+  }
 
-  // 4. re-renderPositions
-  // 5. re-renderPlayground
+  if (!destroy){
+    return true;
+  }
+
+  playground = createPlayground()
+
+  for(let i = 0; i < objects.length; i++){
+
+    let newPositions = []
+
+    for (let j = 0; j < objects[i].position.length; j++) {
+      if (objects[i].position[j][0] > k ) {
+        newPositions.push([objects[i].position[j][0] - 1, objects[i].position[j][1]])
+      }
+      else if (objects[i].position[j][0] < k){
+        newPositions.push([objects[i].position[j][0], objects[i].position[j][1]])
+      }
+    }
+    objects[i].position = newPositions
+  }
+
+
   renderPlayground()
-}
-
-function moveRight(obj) {
-  console.log('moving right')
-  let currentObject = getCurrentObject();
-  console.log(currentObject);
-}
-
-function moveLeft(obj) {
-  console.log('moving left')
-  let currentObject = getCurrentObject();
-  console.log(currentObject);
-}
-
-function pauseGame() {
-  console.log('pausing the game')
-  clearInterval(gameInterval);
+  return false;
 }
 
 // function createObj() {}
@@ -59,6 +51,4 @@ function pauseGame() {
 renderPlayground()
 
 // interval 1 second
-var gameInterval = setInterval(() => {
-  moveDown();
-}, 4000);
+var gameInterval = setInterval(() => { moveDown();  }, 1000);

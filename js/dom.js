@@ -1,4 +1,14 @@
 // render DOM nodes according to the playground definition
+
+// will add object positions to the empty playground array
+function renderPositions() {
+  objects.forEach( object => {
+    object.position.forEach( ([rowIndex, cellIndex]) => {
+      playground[rowIndex][cellIndex] = TYPE_COLORS[object.type]
+    })
+  });
+}
+
 function renderPlayground() {
   renderPositions();
   let playgroundNode = document.getElementById('playground')
